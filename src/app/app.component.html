@@ -1,3 +1,11 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-header [translucent]="true" collapse="fade" >
+    <app-header></app-header>
+  </ion-header>
+  <ion-content>
+    <ion-router-outlet></ion-router-outlet>
+  </ion-content>
+  <ion-footer>
+    <app-footer></app-footer>
+  </ion-footer>
 </ion-app>

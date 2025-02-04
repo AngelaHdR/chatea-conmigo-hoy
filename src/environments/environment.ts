@@ -3,7 +3,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebaseConfig: {
+    projectId: 'chatea-conmigo-hoy',
+    appId: '1:346098226465:web:3bb4873b2328ba9f335a60',
+    storageBucket: 'chatea-conmigo-hoy.firebasestorage.app',
+    apiKey: 'AIzaSyD41P7ni66oJjZrMpUkxqvvyr1DEsFdF-Y',
+    authDomain: 'chatea-conmigo-hoy.firebaseapp.com',
+    messagingSenderId: '346098226465',
+    measurementId: 'G-N0MYXZCTPY',
+    databaseURL: 'https://chatea-conmigo-hoy-default-rtdb.firebaseio.com',
+  },
 };
 
 /*

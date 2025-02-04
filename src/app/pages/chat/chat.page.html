@@ -1,0 +1,36 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-title>Chat</ion-title>
+  <ion-grid class="ion-padding">
+    <ion-row>
+      <ion-button color="danger" (click)="borrarMessages()"
+        >Borrar Chat</ion-button
+      >
+    </ion-row>
+
+    <ion-list>
+      @for(message of messages;track message){
+      <ion-item><b>{{message.user}}: </b> {{message.text}}</ion-item>
+      }
+    </ion-list>
+    <ion-infinite-scroll position="top" (ionInfinite)="onIonInfinite($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    <ion-row class="ion-margin ion-align-items-end">
+      <ion-col class="ion-align-self-stretch">
+        <ion-input
+          id="name"
+          type="text"
+          [formControl]="messageInput"
+          placeholder="Escribe..."
+          fill="solid"
+        />
+      </ion-col>
+      <ion-col size="auto">
+        <ion-button (click)="sendMessage()" [disabled]="!messageInput.valid"
+          >Send</ion-button
+        >
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
