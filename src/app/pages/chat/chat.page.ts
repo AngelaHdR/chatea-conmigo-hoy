@@ -1,11 +1,13 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   inject,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { InfiniteScrollCustomEvent } from '@ionic/angular';
+import { InfiniteScrollCustomEvent, IonContent } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable } from 'rxjs';
 import { Message } from 'src/app/core/models/message';
@@ -21,27 +23,28 @@ import { toObservable } from '@angular/core/rxjs-interop';
   styleUrls: ['./chat.page.scss'],
 })
 export class ChatPage {
+  
   private readonly authService = inject(AuthService);
   readonly messagesService = inject(MessagesService);
 
+  @ViewChild(IonContent) content?: IonContent;
   messageInput = new FormControl<string>('', Validators.required);
   date: string = '0';
 
   userData = this.authService.userData();
 
-  constructor() {
-    /* this.getMessages = this.messagesService
-      .getMessages(this.date);
-    this.getMessages.pipe(untilDestroyed(this)).subscribe((m) => {
-      this.messages = m;
-      this.date = this.messages[this.messages.length - 1].date;
-    }); */
-    /* this.messagesService.getMessages(this.date).pipe(untilDestroyed(this)).subscribe((m) => {
-      this.messages = m;
-      this.date = this.messages[this.messages.length - 1].date;
-    }); */
+  constructor(){
+    this.messagesService.getLastMessages(this.date);
+    this.messagesService.getInitialMessage();
+    setTimeout(() => {
+      this.scrollBottom();
+    }, 1000);
+  }
 
-    this.messagesService.getMessages();
+  scrollBottom(){
+    if(this.content){
+      this.content.scrollToBottom(100);
+    }
   }
 
   sendMessage(): void {
@@ -54,32 +57,26 @@ export class ChatPage {
     });
 
     this.messageInput.reset();
+    this.scrollBottom();
   }
 
   borrarMessages() {
     this.messagesService.deleteMessages();
+    setTimeout(() => {
+      this.scrollBottom();
+    }, 200);
   }
 
   private generateMessages() {
     if (this.messagesService.messages().length === 0) return;
-
-    /*  this.getMessages
-    .pipe(untilDestroyed(this))
-    .subscribe((m) => {
-      this.messages = m;
-      this.date = this.messages[this.messages.length - 1].date;
-    }); */
-
-    /* this.messagesService.getMessages(this.date).pipe(untilDestroyed(this)).subscribe((m) => {
-      this.messages = m;
-      this.date = this.messages[this.messages.length - 1].date;
-    }); */
+    this.messagesService.getLastMessages(this.date);
   }
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {
-    this.messagesService.getMessages();
+    this.date = this.messagesService.messages()[0].date;
+    this.generateMessages();
     setTimeout(() => {
       event.target.complete();
-    }, 500);
+    }, 1000);
   }
 }
