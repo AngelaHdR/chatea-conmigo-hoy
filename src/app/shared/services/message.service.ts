@@ -1,45 +1,59 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
+import { getAuth } from '@angular/fire/auth';
 import {
-  AngularFireDatabase,
-  AngularFireList,
-} from '@angular/fire/compat/database';
-import { map, Observable } from 'rxjs';
+  get,
+  getDatabase,
+  limitToFirst,
+  orderByChild,
+  push,
+  query,
+  ref,
+  remove,
+  set,
+  startAt,
+} from '@angular/fire/database';
 import { Message } from 'src/app/core/models/message';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessagesService {
-  private readonly db = inject(AngularFireDatabase);
+  auth = getAuth();
+  db = getDatabase();
 
-  private messagesDB!: AngularFireList<Message>;
+  messages: WritableSignal<any> = signal([]);
 
   addMessage(messageInput: Message): void {
-    this.messagesDB.push(messageInput);
+    const _ref = push(ref(this.db, '/messages'));
+    set(_ref, messageInput);
+
+    this.messages.update((_messages) => [..._messages, messageInput]);
   }
 
   deleteMessages() {
-    this.messagesDB.remove();
+    remove(ref(this.db, '/messages'));
+    this.messages.set([]);
   }
 
-  getMessages(initialDate: string): Observable<Message[]> {
-    this.messagesDB = this.db.list<Message>('/messages', (ref) =>
-      ref.orderByChild('date').limitToFirst(10).startAfter(initialDate),
+  getMessages(start = 0) {
+    const messagesRef = query(
+      ref(this.db, '/messages'),
+      orderByChild('date'),
+      limitToFirst(10),
+      startAt(start),
     );
 
-    return this.messagesDB
-      .snapshotChanges()
-      .pipe(
-        map((changes) =>
-          changes.map((c) => this.getUserFromPayload(c.payload)),
-        ),
-      );
-  }
-
-  getUserFromPayload(payload: any): Message {
-    return {
-      ...payload.val(),
-      $key: payload.key,
-    };
+    get(messagesRef).then((snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const message = childSnapshot.val();
+        this.messages.update((_messages) => [
+          ..._messages,
+          {
+            key: childSnapshot.key,
+            ...message,
+          },
+        ]);
+      });
+    });
   }
 }

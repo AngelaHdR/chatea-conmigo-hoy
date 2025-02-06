@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   getAuth,
@@ -16,36 +16,27 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
   private readonly router = inject(Router);
 
-  public provider = new GoogleAuthProvider();
-  public auth = getAuth();
-  public userData = new BehaviorSubject<User | undefined>(undefined);
-  userData$ = this.userData.asObservable();
+  provider = new GoogleAuthProvider();
+  auth = getAuth();
+  userData: WritableSignal<User | null> = signal(null);
 
   login(): void {
-    signInWithPopup(this.auth, this.provider).then((result: any) => {
+    signInWithPopup(this.auth, this.provider).then((result) => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
-      this.getUserData();
+      this.userData.set(result.user);
       this.router.navigate(['/chat']);
     });
   }
 
   logout(): void {
-    signOut(this.auth)
-      .then(() => {
-        console.log('Logged out');
-        this.userData.next(undefined);
-        this.router.navigate(['/login']);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  getUserData(): void {
-    onAuthStateChanged(this.auth, (user) => {
-      if (user) {
-        this.userData.next(user);
-      }
-    });
+    // signOut(this.auth)
+    //   .then(() => {
+    //     console.log('Logged out');
+    //     this.userData.set(null);
+    //     this.router.navigate(['/login']);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   }
 }

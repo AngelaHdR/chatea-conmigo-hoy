@@ -2,13 +2,13 @@
   <ion-title>Chat</ion-title>
   <ion-grid class="ion-padding">
     <ion-row>
-      <ion-button color="danger" (click)="borrarMessages()"
-        >Borrar Chat</ion-button
-      >
+      <ion-button color="danger" (click)="borrarMessages()">
+        Borrar Chat
+      </ion-button>
     </ion-row>
 
     <ion-list>
-      @for(message of messages;track message){
+      @for(message of messagesService.messages(); track message.date){
       <ion-item><b>{{message.user}}: </b> {{message.text}}</ion-item>
       }
     </ion-list>
@@ -27,9 +27,9 @@
         />
       </ion-col>
       <ion-col size="auto">
-        <ion-button (click)="sendMessage()" [disabled]="!messageInput.valid"
-          >Send</ion-button
-        >
+        <ion-button (click)="sendMessage()" [disabled]="!messageInput.valid ">
+          Send
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

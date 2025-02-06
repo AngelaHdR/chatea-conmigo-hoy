@@ -14,14 +14,14 @@ import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SharedModule } from './shared/shared.module';
 
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AngularFireDatabase, AngularFireDatabaseModule } from '@angular/fire/compat/database';
-import { provideHttpClient } from '@angular/common/http';
-import { Message } from './core/models/message';
-import { MessagesService } from './shared/services/message.service';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { HeaderComponent } from './shared/components/header/header.component';
+import { FooterComponent } from './shared/components/footer/footer.component';
+
+const customComponents = [HeaderComponent, FooterComponent];
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,23 +31,19 @@ import { MessagesService } from './shared/services/message.service';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AppRoutingModule,
-    SharedModule,
     AngularFireDatabaseModule,
+    ...customComponents,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
-    provideHttpClient(),
-    AngularFireDatabase,
-    MessagesService,
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {
   constructor() {
     const app: FirebaseApp = initializeApp(environment.firebaseConfig);
-    const db = getDatabase(app);
   }
 }
