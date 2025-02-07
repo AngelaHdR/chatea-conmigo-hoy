@@ -12,7 +12,7 @@ export const environment = {
     authDomain: 'chatea-conmigo-hoy.firebaseapp.com',
     messagingSenderId: '346098226465',
     measurementId: 'G-N0MYXZCTPY',
-    databaseURL: 'https://chatea-conmigo-hoy-default-rtdb.firebaseio.com',
+    databaseURL: 'https://chatea-conmigo-hoy-default-rtdb.firebaseio.com/',
   },
 };
 

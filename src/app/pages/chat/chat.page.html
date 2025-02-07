@@ -1,5 +1,5 @@
 <ion-content>
-  <ion-infinite-scroll threshold="10px" (ionInfinite)="onIonInfinite($event)">
+  <ion-infinite-scroll threshold="-50px" position="top" (ionInfinite)="onIonInfinite($event)" #infiniteScroll>
     <ion-infinite-scroll-content
       loadingSpinner="crescent"
       loadingText="Loading messages..."

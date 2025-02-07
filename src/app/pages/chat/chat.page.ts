@@ -1,21 +1,9 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { InfiniteScrollCustomEvent, IonContent } from '@ionic/angular';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Observable } from 'rxjs';
-import { Message } from 'src/app/core/models/message';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { MessagesService } from 'src/app/shared/services/message.service';
-import { toObservable } from '@angular/core/rxjs-interop';
 
-@UntilDestroy()
 @Component({
   selector: 'app-chat',
   standalone: false,
@@ -23,26 +11,27 @@ import { toObservable } from '@angular/core/rxjs-interop';
   styleUrls: ['./chat.page.scss'],
 })
 export class ChatPage {
-  
   private readonly authService = inject(AuthService);
   readonly messagesService = inject(MessagesService);
 
   @ViewChild(IonContent) content?: IonContent;
   messageInput = new FormControl<string>('', Validators.required);
-  date: string = '0';
+  date: string = this.generarFecha();
 
   userData = this.authService.userData();
 
-  constructor(){
-    this.messagesService.getLastMessages(this.date);
+  constructor() {
+    console.log('Cargando');
+    //this.messagesService.getLastMessages(this.date);
+    this.messagesService.loadFirstMessages();
     this.messagesService.getInitialMessage();
     setTimeout(() => {
       this.scrollBottom();
     }, 1000);
   }
 
-  scrollBottom(){
-    if(this.content){
+  scrollBottom() {
+    if (this.content) {
       this.content.scrollToBottom(100);
     }
   }
@@ -52,7 +41,7 @@ export class ChatPage {
 
     this.messagesService.addMessage({
       user: this.userData.displayName!,
-      date: new Date().toString(),
+      date: this.generarFecha(),
       text: this.messageInput.value!,
     });
 
@@ -70,13 +59,29 @@ export class ChatPage {
   private generateMessages() {
     if (this.messagesService.messages().length === 0) return;
     this.messagesService.getLastMessages(this.date);
+    console.log(this.messagesService.messages().length);
   }
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {
     this.date = this.messagesService.messages()[0].date;
     this.generateMessages();
+
     setTimeout(() => {
       event.target.complete();
-    }, 1000);
+    }, 2000);
+  }
+
+  private generarFecha():string {
+    const fecha = new Date();
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Mes comienza desde 0
+    const año = fecha.getFullYear();
+    const hora = String(fecha.getHours()).padStart(2, '0');
+    const minutos = String(fecha.getMinutes()).padStart(2, '0');
+    const segundos = String(fecha.getSeconds()).padStart(2, '0');
+
+    const formato = `${año}/${mes}/${dia} ${hora}:${minutos}:${segundos}`;
+
+    return formato;
   }
 }

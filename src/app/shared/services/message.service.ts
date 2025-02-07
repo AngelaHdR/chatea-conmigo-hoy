@@ -1,6 +1,7 @@
 import { Injectable, OnInit, signal, WritableSignal } from '@angular/core';
 import { getAuth } from '@angular/fire/auth';
 import {
+  endAt,
   endBefore,
   get,
   getDatabase,
@@ -12,6 +13,7 @@ import {
   ref,
   remove,
   set,
+  startAfter,
   startAt,
 } from '@angular/fire/database';
 import { Message } from 'src/app/core/models/message';
@@ -48,20 +50,16 @@ export class MessagesService {
     get(messagesRef).then((snapshot) => {
       snapshot.forEach((childSnapshot) => {
         const message = childSnapshot.val();
-        console.log(message);
         this.firstMessage = message;
       });
     });
-
-    console.log(this.firstMessage);
   }
 
-  getLastMessages(start: string) {
+  loadFirstMessages() {
     const messagesRef = query(
       ref(this.db, '/messages'),
       orderByChild('date'),
       limitToLast(10),
-      endBefore(start),
     );
 
     get(messagesRef).then((snapshot) => {
@@ -76,6 +74,30 @@ export class MessagesService {
             },
           ]);
         }
+      });
+    });
+  }
+
+  getLastMessages(start: string) {
+    const messagesRef = query(
+      ref(this.db, '/messages'),
+      orderByChild('date'),
+      startAt(start),
+      limitToFirst(10),
+    );
+
+    get(messagesRef).then((snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const message = childSnapshot.val();
+        if (message.date == this.firstMessage?.date) return;
+
+        this.messages.update((_messages) => [
+          ..._messages,
+          {
+            key: childSnapshot.key,
+            ...message,
+          },
+        ]);
       });
     });
   }
