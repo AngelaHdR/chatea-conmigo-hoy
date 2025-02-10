@@ -1,5 +1,10 @@
 <ion-content>
-  <ion-infinite-scroll threshold="-50px" position="top" (ionInfinite)="onIonInfinite($event)" #infiniteScroll>
+  <ion-infinite-scroll
+    threshold="-50px"
+    position="top"
+    (ionInfinite)="onIonInfinite($event)"
+    #infiniteScroll
+  >
     <ion-infinite-scroll-content
       loadingSpinner="crescent"
       loadingText="Loading messages..."
@@ -9,34 +14,35 @@
 
   <ion-col>
     <ion-list>
-      @for(message of messagesService.messages(); track message.date){
+      @for(message of messagesService.messages2; track message.date){
       <ion-item><b>{{message.user}}: </b> {{message.text}}</ion-item>
       }
     </ion-list>
   </ion-col>
 </ion-content>
 
-<br /><br />
 <ion-col>
-  <ion-row class="ion-margin ion-align-items-end">
-    <ion-col class="ion-align-self-stretch">
-      <ion-input
-        id="name"
-        type="text"
-        [formControl]="messageInput"
-        placeholder="Escribe..."
-        fill="solid"
-      />
-    </ion-col>
-    <ion-col size="auto">
-      <ion-button (click)="sendMessage()" [disabled]="!messageInput.valid ">
-        Send
+  <form (ngSubmit)="sendMessage()">
+    <ion-row class="ion-margin ion-align-items-end">
+      <ion-col class="ion-align-self-stretch">
+        <ion-input
+          id="name"
+          type="text"
+          [formControl]="messageInput"
+          placeholder="Escribe..."
+          fill="solid"
+        />
+      </ion-col>
+      <ion-col size="auto">
+        <ion-button (click)="sendMessage()" [disabled]="!messageInput.valid ">
+          Send
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-margin">
+      <ion-button color="danger" (click)="borrarMessages()">
+        Borrar Chat
       </ion-button>
-    </ion-col>
-  </ion-row>
-  <ion-row class="ion-margin">
-    <ion-button color="danger" (click)="borrarMessages()">
-      Borrar Chat
-    </ion-button>
-  </ion-row>
+    </ion-row>
+  </form>
 </ion-col>

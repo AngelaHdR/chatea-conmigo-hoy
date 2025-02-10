@@ -17,8 +17,9 @@ export class ChatPage {
   @ViewChild(IonContent) content?: IonContent;
   messageInput = new FormControl<string>('', Validators.required);
   date: string = this.generarFecha();
-
+  size:number = 10;
   userData = this.authService.userData();
+
 
   constructor() {
     console.log('Cargando');
@@ -33,6 +34,12 @@ export class ChatPage {
   scrollBottom() {
     if (this.content) {
       this.content.scrollToBottom(100);
+    }
+  }
+
+  scrollToMiddle(){
+    if (this.content) {
+      this.content.scrollToPoint(0, 100, 100);
     }
   }
 
@@ -56,19 +63,21 @@ export class ChatPage {
     }, 200);
   }
 
-  private generateMessages() {
-    if (this.messagesService.messages().length === 0) return;
-    this.messagesService.getLastMessages(this.date);
-    console.log(this.messagesService.messages().length);
-  }
-
   onIonInfinite(event: InfiniteScrollCustomEvent) {
     this.date = this.messagesService.messages()[0].date;
+    this.size += 10;
     this.generateMessages();
 
     setTimeout(() => {
       event.target.complete();
     }, 2000);
+  }
+
+  private generateMessages() {
+    if (this.messagesService.messages().length === 0) return;
+    this.messagesService.getLastMessages(this.size);
+    console.log(this.messagesService.messages().length);
+    this.scrollToMiddle();
   }
 
   private generarFecha():string {
