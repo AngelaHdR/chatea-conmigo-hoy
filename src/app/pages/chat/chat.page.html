@@ -21,28 +21,35 @@
   </ion-col>
 </ion-content>
 
-<ion-col>
-  <form (ngSubmit)="sendMessage()">
-    <ion-row class="ion-margin ion-align-items-end">
-      <ion-col class="ion-align-self-stretch">
-        <ion-input
-          id="name"
-          type="text"
-          [formControl]="messageInput"
-          placeholder="Escribe..."
-          fill="solid"
-        />
-      </ion-col>
-      <ion-col size="auto">
-        <ion-button (click)="sendMessage()" [disabled]="!messageInput.valid ">
-          Send
-        </ion-button>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-margin">
-      <ion-button color="danger" (click)="borrarMessages()">
-        Borrar Chat
-      </ion-button>
-    </ion-row>
-  </form>
-</ion-col>
+<ion-footer>
+  <ion-toolbar>
+    <ion-col>
+      <form (ngSubmit)="sendMessage()">
+        <ion-row class="ion-margin ion-align-items-end">
+          <ion-col class="ion-align-self-stretch">
+            <ion-input
+              id="name"
+              type="text"
+              [formControl]="messageInput"
+              placeholder="Escribe..."
+              fill="solid"
+            />
+          </ion-col>
+          <ion-col size="auto">
+            <ion-button
+              (click)="sendMessage()"
+              [disabled]="!messageInput.valid "
+            >
+              Send
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin">
+          <ion-button color="danger" (click)="borrarMessages()">
+            Borrar Chat
+          </ion-button>
+        </ion-row>
+      </form>
+    </ion-col>
+  </ion-toolbar>
+</ion-footer>

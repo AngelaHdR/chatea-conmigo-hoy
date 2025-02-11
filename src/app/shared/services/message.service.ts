@@ -94,16 +94,17 @@ export class MessagesService {
       orderByChild('date'),
       limitToLast(start),
     );
-    //this.messages2 = []; //Si se hace con un listado habria que limpiarlo y volver a buscar, genera una espera
-
+    
     get(messagesRef).then((snapshot) => {
+      let position = 0;
       snapshot.forEach((childSnapshot) => {
         const message = childSnapshot.val();
         if (message.date == this.firstMessage?.date) return;
 
         //listado
         if(this.messages2.find((m) => m.date === message.date)) return;
-        this.messages2.unshift(message);
+        this.messages2.splice(position, 0, message);
+        position +=1;
 
         //señales
         this.messages.update((_messages) => [

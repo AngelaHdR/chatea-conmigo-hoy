@@ -29,14 +29,14 @@ export class AuthService {
   }
 
   logout(): void {
-    // signOut(this.auth)
-    //   .then(() => {
-    //     console.log('Logged out');
-    //     this.userData.set(null);
-    //     this.router.navigate(['/login']);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+     signOut(this.auth)
+       .then(() => {
+         console.log('Logged out');
+         this.userData.set(null);
+         this.router.navigate(['/login']);
+       })
+       .catch((error) => {
+         console.log(error);
+       });
   }
 }

@@ -76,7 +76,6 @@ export class ChatPage {
   private generateMessages() {
     if (this.messagesService.messages().length === 0) return;
     this.messagesService.getLastMessages(this.size);
-    console.log(this.messagesService.messages().length);
     this.scrollToMiddle();
   }
 
