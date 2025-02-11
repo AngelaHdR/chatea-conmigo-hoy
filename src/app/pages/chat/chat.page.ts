@@ -10,25 +10,19 @@ import { MessagesService } from 'src/app/shared/services/message.service';
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
 })
-export class ChatPage {
+export class ChatPage implements OnInit {
   private readonly authService = inject(AuthService);
   readonly messagesService = inject(MessagesService);
 
   @ViewChild(IonContent) content?: IonContent;
   messageInput = new FormControl<string>('', Validators.required);
-  date: string = this.generarFecha();
-  size:number = 10;
   userData = this.authService.userData();
 
 
-  constructor() {
-    console.log('Cargando');
-    //this.messagesService.getLastMessages(this.date);
-    this.messagesService.loadFirstMessages();
-    this.messagesService.getInitialMessage();
-    setTimeout(() => {
-      this.scrollBottom();
-    }, 1000);
+  ngOnInit(): void {
+    this.messagesService.getLastMessages();
+
+    this.scrollBottom();
   }
 
   scrollBottom() {
@@ -37,7 +31,7 @@ export class ChatPage {
     }
   }
 
-  scrollToMiddle(){
+  scrollToMiddle() {
     if (this.content) {
       this.content.scrollToPoint(0, 100, 100);
     }
@@ -48,7 +42,7 @@ export class ChatPage {
 
     this.messagesService.addMessage({
       user: this.userData.displayName!,
-      date: this.generarFecha(),
+      date: new Date().getTime(),
       text: this.messageInput.value!,
     });
 
@@ -64,32 +58,14 @@ export class ChatPage {
   }
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {
-    this.date = this.messagesService.messages()[0].date;
-    this.size += 10;
+    console.log('onIonInfinite');
     this.generateMessages();
-
     setTimeout(() => {
       event.target.complete();
-    }, 2000);
+    }, 200);
   }
 
   private generateMessages() {
-    if (this.messagesService.messages().length === 0) return;
-    this.messagesService.getLastMessages(this.size);
-    this.scrollToMiddle();
-  }
-
-  private generarFecha():string {
-    const fecha = new Date();
-    const dia = String(fecha.getDate()).padStart(2, '0');
-    const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Mes comienza desde 0
-    const año = fecha.getFullYear();
-    const hora = String(fecha.getHours()).padStart(2, '0');
-    const minutos = String(fecha.getMinutes()).padStart(2, '0');
-    const segundos = String(fecha.getSeconds()).padStart(2, '0');
-
-    const formato = `${año}/${mes}/${dia} ${hora}:${minutos}:${segundos}`;
-
-    return formato;
+    this.messagesService.getLastMessages();
   }
 }
