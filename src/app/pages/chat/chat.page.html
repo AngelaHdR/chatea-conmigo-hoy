@@ -1,6 +1,6 @@
 <ion-content [scrollEvents]="true">
   <ion-infinite-scroll
-    threshold="30"
+    threshold="20"
     position="top"
     (ionInfinite)="onIonInfinite($event)"
   >
@@ -14,7 +14,10 @@
   <ion-col>
     <ion-list>
       @for(message of messagesService.orderMessages(); track message.date){
-      <ion-item><b>{{message.user}}: </b> {{message.text}}</ion-item>
+      <ion-item
+        ><b>{{message.user}} ({{message.location}}): </b>
+        {{message.text}}</ion-item
+      >
       }
     </ion-list>
   </ion-col>

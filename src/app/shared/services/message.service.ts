@@ -9,7 +9,6 @@ import { getAuth } from '@angular/fire/auth';
 import {
   get,
   getDatabase,
-  limitToFirst,
   limitToLast,
   orderByChild,
   push,
@@ -27,41 +26,26 @@ export class MessagesService {
   auth = getAuth();
   db = getDatabase();
 
-  messages: WritableSignal<Message[]> = signal([]);
-  orderMessages: Signal<Message[]> = computed(() =>
-    this.messages().sort((a: Message, b: Message) => a.date - b.date),
-  );
-  firstMessage?: Message;
   size = 10;
+  messages: WritableSignal<Message[]> = signal([]);
+  orderMessages: Signal<Message[]> = computed(() => {
+    this.messages().sort((a: Message, b: Message) => a.date - b.date);
+    return this.messages().filter(
+      (msg, index, self) =>
+        index === self.findIndex((m) => m.date === msg.date),
+    );
+  });
 
   addMessage(messageInput: Message): void {
     const _ref = push(ref(this.db, '/messages'));
     set(_ref, messageInput);
-
-    //señales
     this.messages.update((_messages) => [..._messages, messageInput]);
   }
 
   deleteMessages() {
     remove(ref(this.db, '/messages'));
-    //señales
     this.messages.set([]);
   }
-
-  // getInitialMessage() {
-  //   const messagesRef = query(
-  //     ref(this.db, '/messages'),
-  //     orderByChild('date'),
-  //     limitToFirst(1),
-  //   );
-
-  //   get(messagesRef).then((snapshot) => {
-  //     snapshot.forEach((childSnapshot) => {
-  //       const message = childSnapshot.val();
-  //       this.firstMessage = message;
-  //     });
-  //   });
-  // }
 
   getLastMessages() {
     const messagesRef = query(
