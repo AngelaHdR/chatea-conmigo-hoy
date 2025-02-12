@@ -47,6 +47,17 @@ export class MessagesService {
     this.messages.set([]);
   }
 
+  async countMessages() {
+    const messagesRef = ref(this.db, '/messages');
+
+    const snapshot = await get(messagesRef);
+    if (snapshot.exists()) {
+      return snapshot.size;
+    } else {
+      return 0;
+    }
+  }
+
   getLastMessages() {
     const messagesRef = query(
       ref(this.db, '/messages'),

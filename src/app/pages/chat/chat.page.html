@@ -2,6 +2,8 @@
   <ion-infinite-scroll
     threshold="-10"
     position="top"
+    class="ion-margin-top"
+    [disabled]="disableInfiniteScroll"
     (ionInfinite)="onIonInfinite($event)"
   >
     <ion-infinite-scroll-content

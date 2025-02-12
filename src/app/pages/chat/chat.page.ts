@@ -1,18 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Geolocation, Position } from '@capacitor/geolocation';
-import { InfiniteScrollCustomEvent, IonContent, IonicModule } from '@ionic/angular';
+import {
+  InfiniteScrollCustomEvent,
+  IonContent,
+  IonicModule,
+} from '@ionic/angular';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { MessagesService } from 'src/app/shared/services/message.service';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports:[CommonModule,
-      FormsModule,
-      IonicModule,
-      ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, IonicModule, ReactiveFormsModule],
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
 })
@@ -21,15 +27,25 @@ export class ChatPage implements OnInit {
   readonly messagesService = inject(MessagesService);
 
   @ViewChild(IonContent) content?: IonContent;
+  disableInfiniteScroll = true;
   messageInput = new FormControl<string>('', Validators.required);
   userData = this.authService.userData();
   locationString = '';
+  total: number = 0;
 
   ngOnInit(): void {
     this.messagesService.getLastMessages();
+    this.messagesService.countMessages().then((total) => {
+      this.total = total;
+    });
+
     setTimeout(() => {
       this.scrollBottom();
-    }, 700);
+    }, 900);
+
+    setTimeout(() => {
+      this.disableInfiniteScroll = false;
+    }, 2000);
 
     Geolocation.getCurrentPosition().then((position) => {
       this.locationString =
@@ -46,9 +62,18 @@ export class ChatPage implements OnInit {
     }
   }
 
-  scrollToMiddle() {
+  scrollDownBy100() {
     if (this.content) {
       this.content.scrollToPoint(0, 100, 100);
+    }
+  }
+
+  async scrollDownBy500() {
+    if (this.content) {
+      const scrollElement = await this.content.getScrollElement();
+      const currentScrollTop = scrollElement.scrollTop;
+
+      this.content.scrollToPoint(0, currentScrollTop + 550, 300);
     }
   }
 
@@ -76,13 +101,20 @@ export class ChatPage implements OnInit {
     setTimeout(() => {
       this.generateMessages();
       event.target.complete();
-    }, 700);
+    }, 500);
   }
 
   private generateMessages() {
     this.messagesService.getLastMessages();
-    setTimeout(() => {
-      this.scrollToMiddle();
-    }, 100);
+    if (this.messagesService.orderMessages().length >= this.total - 1) {
+      setTimeout(() => {
+        this.scrollDownBy100();
+        this.disableInfiniteScroll = true;
+      }, 100);
+    } else {
+      setTimeout(() => {
+        this.scrollDownBy500();
+      }, 100);
+    }
   }
 }
