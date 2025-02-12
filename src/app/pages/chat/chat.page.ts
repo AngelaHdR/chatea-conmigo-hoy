@@ -1,13 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Geolocation, Position } from '@capacitor/geolocation';
-import { InfiniteScrollCustomEvent, IonContent } from '@ionic/angular';
+import { InfiniteScrollCustomEvent, IonContent, IonicModule } from '@ionic/angular';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { MessagesService } from 'src/app/shared/services/message.service';
 
 @Component({
   selector: 'app-chat',
-  standalone: false,
+  standalone: true,
+  imports:[CommonModule,
+      FormsModule,
+      IonicModule,
+      ReactiveFormsModule],
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
 })
@@ -18,14 +23,14 @@ export class ChatPage implements OnInit {
   @ViewChild(IonContent) content?: IonContent;
   messageInput = new FormControl<string>('', Validators.required);
   userData = this.authService.userData();
-  location?: Promise<Position>;
   locationString = '';
 
   ngOnInit(): void {
     this.messagesService.getLastMessages();
+    setTimeout(() => {
+      this.scrollBottom();
+    }, 700);
 
-    this.scrollBottom();
-    this.location = Geolocation.getCurrentPosition();
     Geolocation.getCurrentPosition().then((position) => {
       this.locationString =
         'Lat: ' +
@@ -47,7 +52,7 @@ export class ChatPage implements OnInit {
     }
   }
 
-  async sendMessage(): Promise<void> {
+  sendMessage(): void {
     if (!this.userData) return;
 
     this.messagesService.addMessage({
@@ -58,24 +63,26 @@ export class ChatPage implements OnInit {
     });
 
     this.messageInput.reset();
-    this.scrollBottom();
+    setTimeout(() => {
+      this.scrollBottom();
+    }, 100);
   }
 
   borrarMessages() {
     this.messagesService.deleteMessages();
-    setTimeout(() => {
-      this.scrollBottom();
-    }, 200);
   }
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {
-    this.generateMessages();
     setTimeout(() => {
+      this.generateMessages();
       event.target.complete();
-    }, 500);
+    }, 700);
   }
 
   private generateMessages() {
     this.messagesService.getLastMessages();
+    setTimeout(() => {
+      this.scrollToMiddle();
+    }, 100);
   }
 }

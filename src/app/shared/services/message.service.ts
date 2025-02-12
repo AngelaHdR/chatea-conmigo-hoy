@@ -54,18 +54,15 @@ export class MessagesService {
       limitToLast(this.size),
     );
 
-    this.size += 10;
-
     get(messagesRef).then((snapshot) => {
       const emptyMessages: any = [];
       snapshot.forEach((childSnapshot) => {
         const message = childSnapshot.val();
         emptyMessages.push(message);
       });
-
-      console.log({ emptyMessages });
-
       this.messages.update((_messages) => [..._messages, ...emptyMessages]);
     });
+
+    this.size += 10;
   }
 }

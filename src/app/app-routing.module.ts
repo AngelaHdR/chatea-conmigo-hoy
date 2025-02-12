@@ -5,13 +5,13 @@ import { authLoginGuard } from './shared/guards/auth-login.guard';
 const routes: Routes = [
   {
     path: 'login',
-    loadChildren: () =>
-      import('./pages/login/login.module').then((m) => m.LoginPageModule),
+    loadComponent: () =>
+      import('./pages/login/login.page').then((m) => m.LoginPage),
   },
   {
     path: 'chat',
-    loadChildren: () =>
-      import('./pages/chat/chat.module').then((m) => m.ChatPageModule),
+    loadComponent: () =>
+      import('./pages/chat/chat.page').then((m) => m.ChatPage),
     canActivate: [authLoginGuard],
   },
   {
