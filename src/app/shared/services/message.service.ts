@@ -47,27 +47,31 @@ export class MessagesService {
     this.messages.set([]);
   }
 
-  deleteOneMessage(date:number) {
+  deleteOneMessage(date: number) {
     const messagesRef = ref(this.db, '/messages');
     get(messagesRef).then((snapshot) => {
       snapshot.forEach((childSnapshot) => {
         const message = childSnapshot.val();
         if (message.date === date) {
           remove(childSnapshot.ref);
-          this.messages.update((_messages) => [..._messages.filter((m) => m.date !== date)]);
+          this.messages.update((_messages) => [
+            ..._messages.filter((m) => m.date !== date),
+          ]);
         }
       });
     });
   }
 
-  modifyMessage(date:number, text:string){
+  modifyMessage(date: number, text: string) {
     const messagesRef = ref(this.db, '/messages');
     get(messagesRef).then((snapshot) => {
       snapshot.forEach((childSnapshot) => {
         const message = childSnapshot.val();
         if (message.date === date) {
           set(childSnapshot.ref, { ...message, text });
-          this.messages.update((_messages) => [..._messages.map((m) => m.date === date ? { ...m, text } : m)]);
+          this.messages.update((_messages) => [
+            ..._messages.map((m) => (m.date === date ? { ...m, text } : m)),
+          ]);
         }
       });
     });

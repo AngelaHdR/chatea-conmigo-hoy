@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Geolocation, Position } from '@capacitor/geolocation';
+import { Geolocation } from '@capacitor/geolocation';
 import {
   InfiniteScrollCustomEvent,
   IonContent,
@@ -32,8 +32,8 @@ export class ChatPage implements OnInit {
   userData = this.authService.userData();
   locationString = '';
   total: number = 0;
-  openEdit:boolean = false;
-  dateEdit:number = 0;
+  openEdit: boolean = false;
+  dateEdit: number = 0;
 
   ngOnInit(): void {
     this.messagesService.getLastMessages();
@@ -99,14 +99,14 @@ export class ChatPage implements OnInit {
     this.messagesService.deleteMessages();
   }
 
-  deleteOneMessage(date:number){
+  deleteOneMessage(date: number) {
     this.messagesService.deleteOneMessage(date);
     setTimeout(() => {
       this.scrollBottom();
     }, 100);
   }
 
-  modifyMessage(date:number, text:string){
+  modifyMessage(date: number, text: string) {
     this.messagesService.modifyMessage(date, text);
     setTimeout(() => {
       this.scrollBottom();
@@ -114,12 +114,12 @@ export class ChatPage implements OnInit {
     this.closeEditForm();
   }
 
-  openEditForm(date:number){
+  openEditForm(date: number) {
     this.dateEdit = date;
     this.openEdit = true;
   }
 
-  closeEditForm(){
+  closeEditForm() {
     this.openEdit = false;
     this.dateEdit = 0;
   }

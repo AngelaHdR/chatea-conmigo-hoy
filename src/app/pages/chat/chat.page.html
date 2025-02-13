@@ -18,13 +18,14 @@
       @for(message of messagesService.orderMessages(); track message.date){
       <ion-item>
         <b>{{message.user}} ({{message.location}}): </b>
-        @if(!openEdit || dateEdit != message.date){
-        {{message.text}}
-        }
+
+        @if(!openEdit || dateEdit != message.date){ {{message.text}} }
+
         <ion-chip
           (click)="openEditForm(message.date)"
           color="info"
           slot="end"
+          aria-label="Edit message"
         >
           <ion-icon name="pencil-outline"></ion-icon>
         </ion-chip>
@@ -32,9 +33,11 @@
           (click)="deleteOneMessage(message.date)"
           color="danger"
           slot="end"
+          aria-label="Delete message"
         >
           <ion-label> X </ion-label>
         </ion-chip>
+
         @if(openEdit && dateEdit == message.date){
         <form>
           <ion-item>
@@ -46,13 +49,22 @@
           </ion-item>
           <ion-button
             (click)="modifyMessage(message.date, editMessage.value!.toString())"
-            [disabled]="!message.text" fill="outline" size="small" color="tertiary"
+            [disabled]="!message.text"
+            fill="outline"
+            size="small"
+            color="tertiary"
           >
             Editar
           </ion-button>
-          <ion-button (click)="closeEditForm()" fill="outline" size="small" color="danger">Cancelar</ion-button>
+          <ion-button
+            (click)="closeEditForm()"
+            fill="outline"
+            size="small"
+            color="danger"
+            >Cancelar</ion-button
+          >
         </form>
-      }
+        }
       </ion-item>
       }
     </ion-list>
