@@ -1,9 +1,10 @@
 <ion-toolbar color="tertiary">
-  <ion-title>Chatea conmigo hoy</ion-title>
+  <ion-title>Chatea conmigo</ion-title>
   
   @if (authService.userData()) {
-    <ion-chip (click)="logout()" slot="end" color="light">
-      <ion-icon name="exit-outline"></ion-icon>
+    <ion-chip (click)="logout()" slot="end" color="light" aria-label="logout">
+      <ion-icon name="exit-outline" ></ion-icon>
+      <ion-label>Logout</ion-label>
     </ion-chip>
   }
 </ion-toolbar>

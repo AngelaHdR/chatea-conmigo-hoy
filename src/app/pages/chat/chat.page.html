@@ -16,10 +16,44 @@
   <ion-col>
     <ion-list>
       @for(message of messagesService.orderMessages(); track message.date){
-      <ion-item
-        ><b>{{message.user}} ({{message.location}}): </b>
-        {{message.text}}</ion-item
-      >
+      <ion-item>
+        <b>{{message.user}} ({{message.location}}): </b>
+        @if(!openEdit || dateEdit != message.date){
+        {{message.text}}
+        }
+        <ion-chip
+          (click)="openEditForm(message.date)"
+          color="info"
+          slot="end"
+        >
+          <ion-icon name="pencil-outline"></ion-icon>
+        </ion-chip>
+        <ion-chip
+          (click)="deleteOneMessage(message.date)"
+          color="danger"
+          slot="end"
+        >
+          <ion-label> X </ion-label>
+        </ion-chip>
+        @if(openEdit && dateEdit == message.date){
+        <form>
+          <ion-item>
+            <ion-input
+              type="text"
+              [value]="message.text"
+              #editMessage
+            ></ion-input>
+          </ion-item>
+          <ion-button
+            (click)="modifyMessage(message.date, editMessage.value!.toString())"
+            [disabled]="!message.text" fill="outline" size="small" color="tertiary"
+          >
+            Editar
+          </ion-button>
+          <ion-button (click)="closeEditForm()" fill="outline" size="small" color="danger">Cancelar</ion-button>
+        </form>
+      }
+      </ion-item>
       }
     </ion-list>
   </ion-col>
@@ -49,7 +83,7 @@
           </ion-col>
         </ion-row>
         <ion-row class="ion-margin">
-          <ion-button color="danger" (click)="borrarMessages()">
+          <ion-button color="danger" (click)="deleteAllMessages()">
             Borrar Chat
           </ion-button>
         </ion-row>

@@ -32,6 +32,8 @@ export class ChatPage implements OnInit {
   userData = this.authService.userData();
   locationString = '';
   total: number = 0;
+  openEdit:boolean = false;
+  dateEdit:number = 0;
 
   ngOnInit(): void {
     this.messagesService.getLastMessages();
@@ -93,13 +95,39 @@ export class ChatPage implements OnInit {
     }, 100);
   }
 
-  borrarMessages() {
+  deleteAllMessages() {
     this.messagesService.deleteMessages();
+  }
+
+  deleteOneMessage(date:number){
+    this.messagesService.deleteOneMessage(date);
+    setTimeout(() => {
+      this.scrollBottom();
+    }, 100);
+  }
+
+  modifyMessage(date:number, text:string){
+    this.messagesService.modifyMessage(date, text);
+    setTimeout(() => {
+      this.scrollBottom();
+    }, 100);
+    this.closeEditForm();
+  }
+
+  openEditForm(date:number){
+    this.dateEdit = date;
+    this.openEdit = true;
+  }
+
+  closeEditForm(){
+    this.openEdit = false;
+    this.dateEdit = 0;
   }
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {
     setTimeout(() => {
       this.generateMessages();
+      this.disableInfiniteScroll = true;
       event.target.complete();
     }, 500);
   }
@@ -114,6 +142,7 @@ export class ChatPage implements OnInit {
     } else {
       setTimeout(() => {
         this.scrollDownBy500();
+        this.disableInfiniteScroll = false;
       }, 100);
     }
   }
