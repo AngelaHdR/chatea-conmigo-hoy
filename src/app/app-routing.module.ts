@@ -12,7 +12,7 @@ const routes: Routes = [
     path: 'chat',
     loadComponent: () =>
       import('./pages/chat/chat.page').then((m) => m.ChatPage),
-    canActivate: [authLoginGuard],
+    
   },
   {
     path: '',

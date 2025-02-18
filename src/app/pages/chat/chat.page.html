@@ -14,17 +14,14 @@
   </ion-infinite-scroll>
 
   <ion-col>
-    <ion-list>
+    <ion-list inset="true" >
       @for(message of messagesService.orderMessages(); track message.date){
       <ion-item>
-        <b>{{message.user}} ({{message.location}}): </b>
-
-        @if(!openEdit || dateEdit != message.date){ {{message.text}} }
-
+        @if(userData?.displayName == message.user){
         <ion-chip
           (click)="openEditForm(message.date)"
           color="info"
-          slot="end"
+          slot="center"
           aria-label="Edit message"
         >
           <ion-icon name="pencil-outline"></ion-icon>
@@ -32,12 +29,41 @@
         <ion-chip
           (click)="deleteOneMessage(message.date)"
           color="danger"
-          slot="end"
+          slot="center"
           aria-label="Delete message"
         >
           <ion-label> X </ion-label>
         </ion-chip>
-
+        <div slot="end" class="messageRight">
+          <p>{{message.user}} ({{message.location}})</p>
+          @if(!openEdit || dateEdit != message.date){ <b>{{message.text}}</b> }
+        </div>
+        } 
+        
+        @if(userData?.displayName != message.user){
+        <div slot="start" class="messageLeft">
+          {{message.user}} ({{message.location}})
+          <br>
+          @if(!openEdit || dateEdit != message.date){ <b>{{message.text}}</b> }
+        </div>
+        <ion-chip
+          (click)="openEditForm(message.date)"
+          color="info"
+          slot="center"
+          aria-label="Edit message"
+        >
+          <ion-icon name="pencil-outline"></ion-icon>
+        </ion-chip>
+        <ion-chip
+          (click)="deleteOneMessage(message.date)"
+          color="danger"
+          slot="center"
+          aria-label="Delete message"
+        >
+          <ion-label> X </ion-label>
+        </ion-chip>
+        } 
+        
         @if(openEdit && dateEdit == message.date){
         <form>
           <ion-item>

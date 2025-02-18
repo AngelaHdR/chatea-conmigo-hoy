@@ -23,7 +23,7 @@ import { MessagesService } from 'src/app/shared/services/message.service';
   styleUrls: ['./chat.page.scss'],
 })
 export class ChatPage implements OnInit {
-  private readonly authService = inject(AuthService);
+  readonly authService = inject(AuthService);
   readonly messagesService = inject(MessagesService);
 
   @ViewChild(IonContent) content?: IonContent;
@@ -56,27 +56,6 @@ export class ChatPage implements OnInit {
         ', Lon:' +
         position.coords.longitude.toPrecision(4);
     });
-  }
-
-  scrollBottom() {
-    if (this.content) {
-      this.content.scrollToBottom(100);
-    }
-  }
-
-  scrollDownBy100() {
-    if (this.content) {
-      this.content.scrollToPoint(0, 100, 100);
-    }
-  }
-
-  async scrollDownBy500() {
-    if (this.content) {
-      const scrollElement = await this.content.getScrollElement();
-      const currentScrollTop = scrollElement.scrollTop;
-
-      this.content.scrollToPoint(0, currentScrollTop + 550, 300);
-    }
   }
 
   sendMessage(): void {
@@ -144,6 +123,27 @@ export class ChatPage implements OnInit {
         this.scrollDownBy500();
         this.disableInfiniteScroll = false;
       }, 100);
+    }
+  }
+
+  scrollBottom() {
+    if (this.content) {
+      this.content.scrollToBottom(100);
+    }
+  }
+
+  scrollDownBy100() {
+    if (this.content) {
+      this.content.scrollToPoint(0, 100, 100);
+    }
+  }
+
+  async scrollDownBy500() {
+    if (this.content) {
+      const scrollElement = await this.content.getScrollElement();
+      const currentScrollTop = scrollElement.scrollTop;
+
+      this.content.scrollToPoint(0, currentScrollTop + 550, 300);
     }
   }
 }
