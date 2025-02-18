@@ -1,16 +1,23 @@
-# Pasos para instalar una aplicacion de ionic con firebase
+# Chatea conmigo
+Esta applicación de mensajería es un prototipo que con unas ligeras modificaciones se puede usar como chatBot de consultas, como mensajería entre varios usuarios o inclusive una mezcla de ambas opciones.
 
-## Instalacion
+*Creado por Àngela Hermosilla del Rio*
 
-Primero crear un proyecto y una app en la consola de firebase
+## Indice
+- [Tecnologias utilizadas](#tecnologías-utilizadas)
+- [Funcionalidades](#funcionalidades)
+- [Estructura de carpetas](#estructura-de-carpetas)
 
-Luego en ionic iniciar un nuevo proyecto con Angular usando una plantilla. Ejecutar los tres comandos indicados.
+## Tecnologías utilizadas
+La base del proyecto está creada con Ionic usando el framework de Angular. Gracias a los componentes propios de ionic para crear la interfaz atractiva la experiencia del usuario es fácil y agradable. Por otro lado, el backend está simulado gracias a Firebase, las dos herramientas utilizadas han sido la autentificación y la base de datos.
 
-Para unir ionic y firebase ejecutar ng add @angula/fire@19.0.0, iniciar la sesion en firebase y seleccionar el proyecto y la aplicacion deseados. Tambien se pueden elegir los servicios de firebase que se desean instalar.
+## Funcionalidades
+Entre las acciones que puede realizar el usuario en la web se distinguen dos tipos:
+- Autentificación: hacer login con su cuenta de google y cerrar la sesión (de manera manual o automática al recargar la página).
+- Mensajeria: cargar los mensajes (de manera progresiva gracias a un scroll inverso), enviar un mensaje nuevo, editar uno de los mensajes mandados anteriormente, borrar un mensaje y borrar el chat entero.
 
-Para inicializar firebase en nuestra app de ionic hay que añadir en el constructor del app.module la siguiente linea: "const app = initializeApp(environment.firebaseConfig);" y copiaremos todas nuestras claves en el fichero environment.ts para poder acceder facilmente.
-
-## Autentificacion
-
-Usando la cuenta de google con un popup
-Conseguido hacer login y logout, falta capturar las credenciales
+## Estructura de carpetas
+El proyecto sigue una estructura de carpetas simple para una fácil comprensión: 
+1. **Core:** se encuentran los modelos usados en la aplicación.
+2. **Pages:** todas las páginas que el usuario puede visitar
+3. **Shared:** conjunto de carpetas usadas en toda la aplicación (servicios, guardas y componentes generales)
