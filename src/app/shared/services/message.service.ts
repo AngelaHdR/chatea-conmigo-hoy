@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import {
   computed,
+  inject,
   Injectable,
   Signal,
   signal,
@@ -17,6 +19,7 @@ import {
   remove,
   set,
 } from '@angular/fire/database';
+import { map, Observable } from 'rxjs';
 import { Message } from 'src/app/core/models/message';
 
 @Injectable({
@@ -35,7 +38,7 @@ export class MessagesService {
         index === self.findIndex((m) => m.date === msg.date),
     );
   });
-
+  
   addMessage(messageInput: Message): void {
     const _ref = push(ref(this.db, '/messages'));
     set(_ref, messageInput);

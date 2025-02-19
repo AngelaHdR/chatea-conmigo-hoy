@@ -21,7 +21,7 @@
         <ion-chip
           (click)="openEditForm(message.date)"
           color="info"
-          slot="center"
+          slot="start"
           aria-label="Edit message"
         >
           <ion-icon name="pencil-outline"></ion-icon>
@@ -29,7 +29,7 @@
         <ion-chip
           (click)="deleteOneMessage(message.date)"
           color="danger"
-          slot="center"
+          slot="start"
           aria-label="Delete message"
         >
           <ion-label> X </ion-label>
@@ -42,26 +42,9 @@
         
         @if(userData?.displayName != message.user){
         <div slot="start" class="messageLeft">
-          {{message.user}} ({{message.location}})
-          <br>
+          <p>{{message.user}} ({{message.location}})</p>
           @if(!openEdit || dateEdit != message.date){ <b>{{message.text}}</b> }
         </div>
-        <ion-chip
-          (click)="openEditForm(message.date)"
-          color="info"
-          slot="center"
-          aria-label="Edit message"
-        >
-          <ion-icon name="pencil-outline"></ion-icon>
-        </ion-chip>
-        <ion-chip
-          (click)="deleteOneMessage(message.date)"
-          color="danger"
-          slot="center"
-          aria-label="Delete message"
-        >
-          <ion-label> X </ion-label>
-        </ion-chip>
         } 
         
         @if(openEdit && dateEdit == message.date){

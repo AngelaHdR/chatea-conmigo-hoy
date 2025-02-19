@@ -20,6 +20,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { provideHttpClient } from '@angular/common/http';
 
 const customComponents = [HeaderComponent, FooterComponent];
 
@@ -38,7 +39,8 @@ const customComponents = [HeaderComponent, FooterComponent];
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
-    provideDatabase(() => getDatabase()),
+    provideDatabase(() => getDatabase()
+  ),
   ],
   bootstrap: [AppComponent],
 })
